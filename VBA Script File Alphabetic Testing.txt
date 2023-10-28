@@ -1,4 +1,4 @@
-Sub doStonks()
+Sub Stocktwits()
 
     ' for each row
     ' add the total VOLUME
@@ -21,7 +21,7 @@ Sub doStonks()
     
     Dim ws As Worksheet
     
-    ' Loop through all of the worksheets in the active workbook.
+    ' Loop through all worksheets in the active workbook.
     For Each ws In Worksheets
         ' column headers
         ws.Cells(1, 9).Value = "Ticker"
@@ -30,7 +30,7 @@ Sub doStonks()
         ws.Cells(1, 12).Value = "Total Volume"
 
     
-        ' defaults
+        ' defaults volume, summary, final row
         totalVolume = 0
         summaryRow = 2
         lastRow = ws.Cells(ws.Rows.Count, 1).End(xlUp).row
@@ -43,7 +43,7 @@ Sub doStonks()
             currStock = ws.Cells(row, 1).Value
             nextStock = ws.Cells(row + 1, 1).Value
             
-            ' add total
+            ' add total volume
             totalVolume = totalVolume + ws.Cells(row, 7).Value
         
             If nextStock <> currStock Then
@@ -64,7 +64,7 @@ Sub doStonks()
                 ws.Cells(summaryRow, 11).Value = percentChange
                 ws.Cells(summaryRow, 12).Value = totalVolume
                 
-                ' conditional formatting
+                ' conditional color formatting
                 If yearlyChange < 0 Then
                     ws.Cells(summaryRow, 10).Interior.ColorIndex = 3
                     ws.Cells(summaryRow, 11).Interior.ColorIndex = 3
@@ -73,7 +73,7 @@ Sub doStonks()
                     ws.Cells(summaryRow, 11).Interior.ColorIndex = 4
                 End If
                 
-                ' reset
+                ' reset value volume, summary row
                 totalVolume = 0
                 summaryRow = summaryRow + 1
                 
@@ -83,7 +83,7 @@ Sub doStonks()
         
         Next row
         
-        ' Another for loop
+        ' Add another for loop
         ' summarize the summary table
         Dim lastSummaryRow As Long
         Dim greatestVolume As Double
@@ -93,7 +93,7 @@ Sub doStonks()
         Dim greatestDecrease As Double
         Dim greatestDecreaseStock As String
         
-        ' defaults
+        ' defaults last summary row, greatest volume, and greatest volume stock
         lastSummaryRow = ws.Cells(ws.Rows.Count, 9).End(xlUp).row
         greatestVolume = ws.Cells(2, 12).Value
         greatestVolumeStock = ws.Cells(2, 9).Value
@@ -118,7 +118,7 @@ Sub doStonks()
                 greatestIncreaseStock = ws.Cells(row, 9).Value
             End If
             
-            ' check for new worst decrease
+            ' check for new greatest decrease
             If ws.Cells(row, 11).Value < greatestDecrease Then
                 greatestDecrease = ws.Cells(row, 11).Value
                 greatestDecreaseStock = ws.Cells(row, 9).Value
@@ -126,7 +126,7 @@ Sub doStonks()
         
         Next row
         
-        ' we're done
+        ' Final summary table
         ws.Cells(1, 16).Value = "Ticker"
         ws.Cells(1, 17).Value = "Value"
         ws.Cells(2, 15).Value = "Greatest % Increase"
@@ -144,7 +144,7 @@ Sub doStonks()
         ws.Cells(4, 17).Value = greatestVolume
         
         
-        ' style the columns
+        ' add the number format to the columns J and K
         ws.Range("J2:J" & summaryRow).NumberFormat = "0.00"
         ws.Range("K2:K" & summaryRow).NumberFormat = "0.00%"
     Next
